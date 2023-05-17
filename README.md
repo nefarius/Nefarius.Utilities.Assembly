@@ -6,6 +6,16 @@
 
 `System.Reflection.Assembly` extensions.
 
+## Documentation
+
+[Link to API docs](docs/index.md).
+
+### Generating documentation
+
+- `dotnet build -c:Release`
+- `dotnet tool install -g XMLDoc2Markdown`
+- `xmldoc2md .\bin\netstandard2.0\Nefarius.Utilities.Assembly.dll .\docs\`
+
 ## 3rd party credits
 
 - [PeNet](https://github.com/secana/PeNet)
