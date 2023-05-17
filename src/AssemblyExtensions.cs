@@ -8,7 +8,7 @@ using PeNet.Header.Resource;
 namespace Nefarius.Utilities.Assembly;
 
 /// <summary>
-///     Extension methods for <see cref="Assembly"/> class.
+///     Extension methods for <see cref="Assembly" /> class.
 /// </summary>
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
 public static class AssemblyExtensions
@@ -23,28 +23,39 @@ public static class AssemblyExtensions
     {
         Version fallback = assembly.GetName().Version;
 
-        PeFile peFile = new(assembly.Location);
+        string filePath = string.IsNullOrEmpty(assembly.Location)
+            ? AppDomain.CurrentDomain.BaseDirectory
+            : assembly.Location;
 
-        if (peFile.Resources is null)
+        try
+        {
+            PeFile peFile = new(filePath);
+
+            if (peFile.Resources is null)
+            {
+                return fallback;
+            }
+
+            if (peFile.Resources.VsVersionInfo is null)
+            {
+                return fallback;
+            }
+
+            if (!peFile.Resources.VsVersionInfo.StringFileInfo.StringTable.Any())
+            {
+                return fallback;
+            }
+
+            StringTable stringTable = peFile.Resources.VsVersionInfo.StringFileInfo.StringTable.First();
+
+            string? productVersion = stringTable.ProductVersion;
+
+            return productVersion is null ? fallback : Version.Parse(productVersion);
+        }
+        catch
         {
             return fallback;
         }
-
-        if (peFile.Resources.VsVersionInfo is null)
-        {
-            return fallback;
-        }
-
-        if (!peFile.Resources.VsVersionInfo.StringFileInfo.StringTable.Any())
-        {
-            return fallback;
-        }
-
-        StringTable stringTable = peFile.Resources.VsVersionInfo.StringFileInfo.StringTable.First();
-
-        string? productVersion = stringTable.ProductVersion;
-
-        return productVersion is null ? fallback : Version.Parse(productVersion);
     }
 
     /// <summary>
@@ -57,27 +68,38 @@ public static class AssemblyExtensions
     {
         Version fallback = assembly.GetName().Version;
 
-        PeFile peFile = new(assembly.Location);
+        string filePath = string.IsNullOrEmpty(assembly.Location)
+            ? AppDomain.CurrentDomain.BaseDirectory
+            : assembly.Location;
 
-        if (peFile.Resources is null)
+        try
+        {
+            PeFile peFile = new(filePath);
+
+            if (peFile.Resources is null)
+            {
+                return fallback;
+            }
+
+            if (peFile.Resources.VsVersionInfo is null)
+            {
+                return fallback;
+            }
+
+            if (!peFile.Resources.VsVersionInfo.StringFileInfo.StringTable.Any())
+            {
+                return fallback;
+            }
+
+            StringTable stringTable = peFile.Resources.VsVersionInfo.StringFileInfo.StringTable.First();
+
+            string? fileVersion = stringTable.FileVersion;
+
+            return fileVersion is null ? fallback : Version.Parse(fileVersion);
+        }
+        catch
         {
             return fallback;
         }
-
-        if (peFile.Resources.VsVersionInfo is null)
-        {
-            return fallback;
-        }
-
-        if (!peFile.Resources.VsVersionInfo.StringFileInfo.StringTable.Any())
-        {
-            return fallback;
-        }
-
-        StringTable stringTable = peFile.Resources.VsVersionInfo.StringFileInfo.StringTable.First();
-
-        string? fileVersion = stringTable.FileVersion;
-
-        return fileVersion is null ? fallback : Version.Parse(fileVersion);
     }
 }
