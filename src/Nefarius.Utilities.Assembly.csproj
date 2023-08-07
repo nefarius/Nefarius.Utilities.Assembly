@@ -16,7 +16,7 @@
   <Import Project="$(SolutionDir)CommonProjectProperties.targets" />
 
   <ItemGroup>
-    <PackageReference Include="PeNet" Version="3.0.0" />
+    <PackageReference Include="PeNet" Version="4.0.0" />
   </ItemGroup>
 
 </Project>
