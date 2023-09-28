@@ -23,10 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(SolutionDir)assets\NSS-128x128.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <None Include="$(SolutionDir)assets\NSS-128x128.png" Pack="true" PackagePath="\" />
     <None Include="$(SolutionDir)README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>

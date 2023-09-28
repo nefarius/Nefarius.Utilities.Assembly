@@ -1,6 +1,6 @@
-﻿#nullable enable
-
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 using PeNet;
 using PeNet.Header.Resource;
@@ -63,7 +63,7 @@ public static class AssemblyExtensions
     /// </summary>
     /// <example>string fileVersion = Assembly.GetEntryAssembly()!.GetFileVersion().ToString()</example>
     /// <param name="assembly">The Assembly to read.</param>
-    /// <returns>The product version.</returns>
+    /// <returns>The file version.</returns>
     public static Version GetFileVersion(this System.Reflection.Assembly assembly)
     {
         Version fallback = assembly.GetName().Version;
