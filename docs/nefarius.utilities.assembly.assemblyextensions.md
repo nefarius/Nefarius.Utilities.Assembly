@@ -46,4 +46,4 @@ The Assembly to read.
 #### Returns
 
 [Version](https://docs.microsoft.com/en-us/dotnet/api/system.version)<br>
-The product version.
+The file version.
