@@ -1,5 +1,5 @@
-# Nefarius.Utilities.Assembly
+# Assembly Nefarius.Utilities.Assembly
 
-## Nefarius.Utilities.Assembly
+## Namespace Nefarius.Utilities.Assembly
 
-[AssemblyExtensions](./nefarius.utilities.assembly.assemblyextensions.md)
+- [AssemblyExtensions](./nefarius.utilities.assembly.assemblyextensions.md)
