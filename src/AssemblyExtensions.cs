@@ -59,6 +59,51 @@ public static class AssemblyExtensions
     }
 
     /// <summary>
+    ///     Gets the assembly product version from the Win32 VERSIONINFO resource.
+    /// </summary>
+    /// <example>string productVersion = Assembly.GetEntryAssembly()!.GetProductVersion().ToString()</example>
+    /// <param name="assembly">The Assembly to read.</param>
+    /// <returns>The file version string directly taken from the PE resource.</returns>
+    public static string GetProductVersionString(this System.Reflection.Assembly assembly)
+    {
+        Version fallback = assembly.GetName().Version;
+
+        string filePath = string.IsNullOrEmpty(assembly.Location)
+            ? AppDomain.CurrentDomain.BaseDirectory
+            : assembly.Location;
+
+        try
+        {
+            PeFile peFile = new(filePath);
+
+            if (peFile.Resources is null)
+            {
+                return fallback.ToString();
+            }
+
+            if (peFile.Resources.VsVersionInfo is null)
+            {
+                return fallback.ToString();
+            }
+
+            if (!peFile.Resources.VsVersionInfo.StringFileInfo.StringTable.Any())
+            {
+                return fallback.ToString();
+            }
+
+            StringTable stringTable = peFile.Resources.VsVersionInfo.StringFileInfo.StringTable.First();
+
+            string? productVersion = stringTable.ProductVersion;
+
+            return productVersion ?? fallback.ToString();
+        }
+        catch
+        {
+            return fallback.ToString();
+        }
+    }
+
+    /// <summary>
     ///     Gets the assembly file version from the Win32 VERSIONINFO resource.
     /// </summary>
     /// <example>string fileVersion = Assembly.GetEntryAssembly()!.GetFileVersion().ToString()</example>
@@ -100,6 +145,51 @@ public static class AssemblyExtensions
         catch
         {
             return fallback;
+        }
+    }
+
+    /// <summary>
+    ///     Gets the assembly file version from the Win32 VERSIONINFO resource.
+    /// </summary>
+    /// <example>string fileVersion = Assembly.GetEntryAssembly()!.GetFileVersion().ToString()</example>
+    /// <param name="assembly">The Assembly to read.</param>
+    /// <returns>The file version string directly taken from the PE resource.</returns>
+    public static string GetFileVersionString(this System.Reflection.Assembly assembly)
+    {
+        Version fallback = assembly.GetName().Version;
+
+        string filePath = string.IsNullOrEmpty(assembly.Location)
+            ? AppDomain.CurrentDomain.BaseDirectory
+            : assembly.Location;
+
+        try
+        {
+            PeFile peFile = new(filePath);
+
+            if (peFile.Resources is null)
+            {
+                return fallback.ToString();
+            }
+
+            if (peFile.Resources.VsVersionInfo is null)
+            {
+                return fallback.ToString();
+            }
+
+            if (!peFile.Resources.VsVersionInfo.StringFileInfo.StringTable.Any())
+            {
+                return fallback.ToString();
+            }
+
+            StringTable stringTable = peFile.Resources.VsVersionInfo.StringFileInfo.StringTable.First();
+
+            string? fileVersion = stringTable.FileVersion;
+
+            return fileVersion ?? fallback.ToString();
+        }
+        catch
+        {
+            return fallback.ToString();
         }
     }
 }
